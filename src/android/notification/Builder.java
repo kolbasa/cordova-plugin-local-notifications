@@ -159,6 +159,9 @@ public final class Builder {
                     options.getProgressMaxValue(),
                     options.getProgressValue(),
                     options.isIndeterminateProgress());
+        } else {
+            // Only set this when no progressbar is used, to prevent a timer reset.
+            builder.setWhen(options.getWhen());
         }
 
         if (options.hasLargeIcon()) {
@@ -374,7 +377,9 @@ public final class Builder {
         int reqCode = random.nextInt();
 
         PendingIntent deleteIntent = PendingIntent.getBroadcast(
-                context, reqCode, intent, FLAG_UPDATE_CURRENT);
+                context, reqCode, intent,
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ?
+                        (FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE): FLAG_UPDATE_CURRENT);
 
         builder.setDeleteIntent(deleteIntent);
     }
@@ -403,7 +408,9 @@ public final class Builder {
         int reqCode = random.nextInt();
 
         PendingIntent contentIntent = PendingIntent.getService(
-                context, reqCode, intent, FLAG_UPDATE_CURRENT);
+                context, reqCode, intent,
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ?
+                        (FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE): FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(contentIntent);
     }
@@ -453,7 +460,9 @@ public final class Builder {
         int reqCode = random.nextInt();
 
         return PendingIntent.getService(
-                context, reqCode, intent, FLAG_UPDATE_CURRENT);
+                context, reqCode, intent,
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ?
+                        (FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE): FLAG_UPDATE_CURRENT);
     }
 
     /**
